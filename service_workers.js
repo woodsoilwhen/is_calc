@@ -1,41 +1,75 @@
-var cacheName = "is_calc_v1.2"
+var cacheName = "is_calc_v1.8"
 var appShellFiles = [
   "/index.html",
   "/index.js",
   "/A2HS.js",
   "/is_calc.webmanifest",
-  "/css/font-awwsome.css",
-  "/css/index.css",
-  "/fonts/fontawesome-webfont.eot",
-  "/fonts/fontawesome-webfont.ttf",
-  "/fonts/fontawesome-webfont.woff",
-  "/fonts/fontawesome-webfont.woff2",
-  "/fonts/fontawesome-webfont_1.eot",
-  "/fonts/glyphicons-halflings-regular.eot",
-  "/fonts/glyphicons-halflings-regular.ttf",
-  "/fonts/glyphicons-halflings-regular.woff",
-  "/fonts/glyphicons-halflings-regular.woff2",
+  // "/css/font-awwsome.css",
+  // "/css/index.css",
+  // "/fonts/fontawesome-webfont.eot",
+  // "/fonts/fontawesome-webfont.ttf",
+  // "/fonts/fontawesome-webfont.woff",
+  // "/fonts/fontawesome-webfont.woff2",
+  // "/fonts/fontawesome-webfont_1.eot",
+  // "/fonts/glyphicons-halflings-regular.eot",
+  // "/fonts/glyphicons-halflings-regular.ttf",
+  // "/fonts/glyphicons-halflings-regular.woff",
+  // "/fonts/glyphicons-halflings-regular.woff2",
+  // "/icon/icon192.png",
+  // "/images/cuta.png",
+  // "/css/font-awesome.css",
+  // "/is_calc/index.html",
+  // "/is_calc/is_calc.css",
+  // "/is_calc/is_calc.js",
+  // "/pr_calc/index.html",
+  // "/pr_calc/pr_calc.css",
+  // "/pr_calc/pr_calc.js"
+];
+
+// //安装
+// self.addEventListener('install',function (e) {
+//   console.log("[Service Worker] 安装");
+//   e.waitUntil(
+//     caches.open("is_calc_v1.9").then(function(cache) {
+//       console.log("[Service Worker] 全部缓存：应用脚本和内容");
+//       cache.addAll([
+//       ]);
+//     })
+//   );
+// });
+
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open('12345').then((cache) => cache.addAll(
+      [
+        "/index.html",
+  "/index.js",
+  "/A2HS.js",
+  "/is_calc.webmanifest",
+  // "/css/font-awwsome.css",
+  // "/css/index.css",
+  // "/fonts/fontawesome-webfont.eot",
+  // "/fonts/fontawesome-webfont.ttf",
+  // "/fonts/fontawesome-webfont.woff",
+  // "/fonts/fontawesome-webfont.woff2",
+  // "/fonts/fontawesome-webfont_1.eot",
+  // "/fonts/glyphicons-halflings-regular.eot",
+  // "/fonts/glyphicons-halflings-regular.ttf",
+  // "/fonts/glyphicons-halflings-regular.woff",
+  // "/fonts/glyphicons-halflings-regular.woff2",
   "/icon/icon192.png",
-  "/images/bilibili.png",
+  // "/images/cuta.png",
   "/css/font-awesome.css",
   "/is_calc/index.html",
   "/is_calc/is_calc.css",
   "/is_calc/is_calc.js",
   "/pr_calc/index.html",
   "/pr_calc/pr_calc.css",
-  "/pr_calc/pr_calc.js"
-];
-
-//安装
-self.addEventListener('install',function (e) {
-  console.log("[Service Worker] 安装");
-  e.waitUntil(
-    caches.open(cacheName).then(function(cache) {
-      console.log("[Service Worker] 全部缓存：应用脚本和内容");
-      cache.addAll(appShellFiles);
-    })
+  "/pr_calc/pr_calc.js",
+      ])),
   );
 });
+
 
 // //响应请求
 // // self.addEventListener('fetch',
@@ -60,24 +94,18 @@ self.addEventListener('install',function (e) {
 // //     );
 // //   }
 // // );
-// //缓存清理
-// self.addEventListener("activate",
-//   function (e) {
-//     e.waitUntil(
-//       caches.keys().then(
-//         function (keyList) {
-//           return Promise.all(keyList.map(
-//             function (key) {
-//               if (cacheName.indexOf(key) === -1) {
-//                 return caches.delete(key);
-//               }
-//             }
-//           ))
+//缓存清理
+// self.addEventListener("activate",function (e) {
+//   e.waitUntil(
+//     caches.keys().then(function (keyList) {
+//       return Promise.all(keyList.map(function (key) {
+//         if (cacheName.indexOf(key) === -1) {
+//           return caches.delete(key);
 //         }
-//       )
-//     );
-//   }
-// )
+//       }))
+//     })
+//   );
+// })
 
 self.addEventListener('fetch', (e) => {
   console.log(e.request.url);
