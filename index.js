@@ -10,7 +10,8 @@ case "/pr_calc/":
     iframe.src = "/pr_calc/";
     break;
 default:
-    storage.setItem("iframe","is_calc");
+    storage.setItem("iframe","/is_calc/");
+    iframe.src = "/is_calc/";
     break;
 }
 

@@ -1,10 +1,11 @@
-var cacheName = "is_calc_v1.2"
+var cacheName = "is_calc_v1.9.3"
 var appShellFiles = [
+  "/",
   "/index.html",
   "/index.js",
   "/A2HS.js",
   "/is_calc.webmanifest",
-  "/css/font-awwsome.css",
+  "/css/font-awesome.css",
   "/css/index.css",
   "/fonts/fontawesome-webfont.eot",
   "/fonts/fontawesome-webfont.ttf",
@@ -16,8 +17,7 @@ var appShellFiles = [
   "/fonts/glyphicons-halflings-regular.woff",
   "/fonts/glyphicons-halflings-regular.woff2",
   "/icon/icon192.png",
-  "/images/bilibili.png",
-  "/css/font-awesome.css",
+  "/images/curta.png",
   "/is_calc/index.html",
   "/is_calc/is_calc.css",
   "/is_calc/is_calc.js",
