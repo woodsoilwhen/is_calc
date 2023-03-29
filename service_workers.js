@@ -1,4 +1,4 @@
-var cacheName = "is_calc_v1.1"
+var cacheName = "is_calc_v1.2"
 var appShellFiles = [
   "/index.html",
   "/index.js",
