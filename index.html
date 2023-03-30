@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-cn">
 
 <head>
     <meta charset="utf-8">
@@ -53,10 +53,12 @@
 
     <div class="page-body">
         <div class="container-md">
+
             <div class="row mb-3">
                 <div class="col">
                     <div class="card">
                         <div class="card-body">
+                            <p class="card-text">三相 380V</p>
                             <h5 class="card-title">功率</h5>
                             <p class="card-text">123</p>
                         </div>
@@ -74,60 +76,103 @@
 
             <hr>
 
-            <div class="d-grid mb-3 ">
+            <!-- 计算按钮 -->
+            <div class="d-grid mb-3 col-10 mx-auto">
                 <button class="btn btn-primary" type="button">计算</button>
             </div>
-            <label class="form-label">功率</label>
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" id="功率" aria-label="Text input with 2 dropdown buttons">
-                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                    aria-expanded="false">kW</button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#">W</a></li>
-                    <li><a class="dropdown-item" href="#">kW</a></li>
-                </ul>
-            </div>
 
-            <label class="form-label">电源类型</label>
-            <div class="d-grid">
-                <div class="btn-group mb-3" role="group" aria-label="Basic radio toggle button group">
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-                    <label class="btn btn-outline-primary" for="btnradio1">三相</label>
-
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="btnradio2">单相</label>
-                </div>
-            </div>
-            <div class="accordion accordion-flush" id="accordionFlushExample">
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="flush-headingOne">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                      Accordion Item #1
-                    </button>
-                  </h2>
-                  <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body">
-                        <label class="form-label">电压</label>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="电压" aria-label="Recipient's username"
-                                aria-describedby="basic-addon2">
-                            <span class="input-group-text" id="basic-addon2">V</span>
-                        </div>
-                        <hr>
-                        <label class="form-label">误差</label>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="误差" aria-label="Recipient's username"
-                                aria-describedby="basic-addon2">
-                            <span class="input-group-text" id="basic-addon2">%</span>
+            <hr>
+            <!-- 计算参数设置 -->
+            <div class="container text-center">
+                <!-- 功率输入 -->
+                <div class="row mb-3">
+                    <label class="col-4 col-form-label">功率</label>
+                    <div class="col-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="功率" placeholder="功率"
+                                aria-label="Text input with 2 dropdown buttons">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">kW</button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">W</a></li>
+                                <li><a class="dropdown-item" href="#">kW</a></li>
+                            </ul>
                         </div>
                     </div>
-                  </div>
-                </div>
-                <div cla
-            
 
-            
-            
+                </div>
+
+                <!-- 电源类型 -->
+                <div class="row">
+                    <label class="col-4 col-form-label">电源类型</label>
+                    <div class="col-8">
+                        <div class="d-grid">
+                            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off"
+                                    checked>
+                                <label class="btn btn-outline-primary" for="btnradio1">三相</label>
+
+                                <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="btnradio2">单相</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- 更多设置的折叠面板 -->
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+                <!-- 折叠面板元素 -->
+                <div class="accordion-item">
+                    <!-- 折叠面板标题 -->
+                    <h2 class="accordion-header" id="flush-headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                            更多设置
+                        </button>
+                    </h2>
+
+                    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
+                        data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                            <!-- 折叠面板内容 -->
+                            <div class="container text-center">
+                                <!-- 电压 -->
+                                <div class="row">
+                                    <label class="col-4 col-form-label">电压</label>
+                                    <div class="col-8">
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" placeholder="电压"
+                                                aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                            <span class="input-group-text">V</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 误差 -->
+                                <div class="row">
+                                    <label class="col-4 col-form-label">误差</label>
+                                    <div class="col-8">
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" placeholder="误差"
+                                                aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 保存/恢复默认按钮 -->
+                            <div class="container text-end">
+                                <button class="btn btn-outline-secondary" type="button">恢复默认</button>
+                                <button class="btn btn-primary" type="button">保存</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
