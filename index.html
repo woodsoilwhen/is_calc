@@ -13,21 +13,19 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Navbar</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
+                data-bs-target="#navbarSupportedContent">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link active" href="#">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Link</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                             Dropdown
                         </a>
                         <ul class="dropdown-menu">
@@ -44,7 +42,7 @@
                     </li>
                 </ul>
                 <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <input class="form-control me-2" type="search" placeholder="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
             </div>
@@ -86,28 +84,32 @@
             <div class="container text-center">
                 <!-- 功率输入 -->
                 <div class="row mb-3">
-                    <label class="col-4 col-form-label">功率</label>
+                    <label class="col-4 col-form-label" for="功率">功率</label>
                     <div class="col-8">
                         <div class="input-group">
-                            <input type="text" class="form-control" id="功率" placeholder="功率"
-                                aria-label="Text input with 2 dropdown buttons">
+                            <input type="text" class="form-control" placeholder="功率" id="功率">
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">kW</button>
+                                data-bs-toggle="dropdown" id="功率单位">kW</button>
+
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">W</a></li>
-                                <li><a class="dropdown-item" href="#">kW</a></li>
+                                <li><a class="dropdown-item" onclick="修改功率单位('W')">W</a></li>
+                                <li><a class="dropdown-item" onclick="修改功率单位('kW')">kW</a></li>
                             </ul>
                         </div>
                     </div>
-
                 </div>
+
+                <script>
+                    var 功率单位 = document.getElementById('功率单位')
+                    function 修改功率单位(单位) { 功率单位.innerHTML = 单位 }
+                </script>
 
                 <!-- 电源类型 -->
                 <div class="row">
                     <label class="col-4 col-form-label">电源类型</label>
                     <div class="col-8">
                         <div class="d-grid">
-                            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                            <div class="btn-group" role="group">
                                 <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off"
                                     checked>
                                 <label class="btn btn-outline-primary" for="btnradio1">三相</label>
@@ -129,23 +131,23 @@
                     <!-- 折叠面板标题 -->
                     <h2 class="accordion-header" id="flush-headingOne">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                            data-bs-target="#flush-collapseOne">
                             更多设置
                         </button>
                     </h2>
 
-                    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
+                    <div id="flush-collapseOne" class="accordion-collapse collapse"
                         data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body">
                             <!-- 折叠面板内容 -->
                             <div class="container text-center">
                                 <!-- 电压 -->
                                 <div class="row">
-                                    <label class="col-4 col-form-label">电压</label>
+                                    <label class="col-4 col-form-label" for="电压">电压</label>
                                     <div class="col-8">
                                         <div class="input-group mb-3">
                                             <input type="text" class="form-control" placeholder="电压"
-                                                aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                            id="电压" onkeyup="更多设置键入(this.value,this.id)">
                                             <span class="input-group-text">V</span>
                                         </div>
                                     </div>
@@ -153,11 +155,11 @@
 
                                 <!-- 误差 -->
                                 <div class="row">
-                                    <label class="col-4 col-form-label">误差</label>
+                                    <label class="col-4 col-form-label" for="误差">误差</label>
                                     <div class="col-8">
                                         <div class="input-group mb-3">
                                             <input type="text" class="form-control" placeholder="误差"
-                                                aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                            id="误差" onkeyup="更多设置键入(this.value,this.id)">
                                             <span class="input-group-text">%</span>
                                         </div>
                                     </div>
@@ -166,8 +168,8 @@
 
                             <!-- 保存/恢复默认按钮 -->
                             <div class="container text-end">
-                                <button class="btn btn-outline-secondary" type="button">恢复默认</button>
-                                <button class="btn btn-primary" type="button">保存</button>
+                                <button class="btn btn-outline-secondary" type="button" id="恢复默认按钮" onclick="恢复默认()">恢复默认</button>
+                                <button class="btn btn-primary" type="button" id="保存按钮" onclick="保存()">保存</button>
                             </div>
                         </div>
                     </div>
@@ -175,6 +177,7 @@
             </div>
         </div>
     </div>
+    <script src="/new.js"></script>
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 
