@@ -142,10 +142,10 @@
                             <!-- 折叠面板内容 -->
                             <div class="container text-center">
                                 <!-- 电压 -->
-                                <div class="row">
+                                <div class="row mb-3">
                                     <label class="col-4 col-form-label" for="电压">电压</label>
                                     <div class="col-8">
-                                        <div class="input-group mb-3">
+                                        <div class="input-group">
                                             <input type="text" class="form-control" placeholder="电压"
                                             id="电压" onkeyup="更多设置键入(this.value,this.id)">
                                             <span class="input-group-text">V</span>
@@ -157,18 +157,34 @@
                                 <div class="row">
                                     <label class="col-4 col-form-label" for="误差">误差</label>
                                     <div class="col-8">
-                                        <div class="input-group mb-3">
+                                        <div class="input-group">
                                             <input type="text" class="form-control" placeholder="误差"
                                             id="误差" onkeyup="更多设置键入(this.value,this.id)">
                                             <span class="input-group-text">%</span>
                                         </div>
                                     </div>
                                 </div>
+
+                                <hr>
+
+                                <!-- 保留小数位数 -->
+                                <div class="row mb-3">
+                                    <label class="col-4 col-form-label" for="保留小数位数">保留小数位数</label>
+                                    <div class="col-8">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" placeholder="保留小数位数"
+                                            id="保留小数位数" onkeyup="更多设置键入(this.value,this.id)">
+                                            <span class="input-group-text">位</span>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <!-- 保存/恢复默认按钮 -->
                             <div class="container text-end">
-                                <button class="btn btn-outline-secondary" type="button" id="恢复默认按钮" onclick="恢复默认()">恢复默认</button>
+                                <button class="btn btn-outline-secondary" type="button" id="恢复默认按钮" onclick="恢复默认()"  >恢复默认</button>
+                                <button class="btn btn-secondary" type="button" id="撤销修改按钮" onclick=""  >撤销修改</button>
                                 <button class="btn btn-primary" type="button" id="保存按钮" onclick="保存()">保存</button>
                             </div>
                         </div>
