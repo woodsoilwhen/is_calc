@@ -11,11 +11,15 @@ function checkNum(str) {
 
 function calc(value, id) {//入口函数、响应输入框的文字更改
     if (checkNum(value)) {
-        if(!value){ //当输入框字符全删除后、清空输出框
+        if (!value) { //当输入框字符全删除后、清空输出框
             document.getElementById("电流").value = "";
-            document.getElementById("电流div").className="未输入";
+            document.getElementById("电流div").className = "未输入";
             document.getElementById("线径").value = "";
-            document.getElementById("线径div").className="未输入";
+            document.getElementById("线径div").className = "未输入";
+            document.getElementById("单相功率").value = "";
+            document.getElementById("单相功率div").className = "未输入";
+            document.getElementById("三相功率").value = "";
+            document.getElementById("三相功率div").className = "未输入";
             return;
         }
         switch (id) {
@@ -23,13 +27,43 @@ function calc(value, id) {//入口函数、响应输入框的文字更改
                 var I = I_calc(value, { a: 11.84, m: 0.628, b: 0, n: 0 })
                 document.getElementById("线径div").className = "已输入";
                 document.getElementById("电流div").className = "显示框";
+                document.getElementById("单相功率div").className = "显示框";
+                document.getElementById("三相功率div").className = "显示框";
                 document.getElementById("电流").value = I;
+                document.getElementById("单相功率").value = 220 * I / 1000;
+                document.getElementById("三相功率").value = 1.732 * 380 * I / 1000;
                 break;
             case "电流":
                 var S = S_calc(value, { a: 11.84, m: 0.628, b: 0, n: 0 })
                 document.getElementById("电流div").className = "已输入";
                 document.getElementById("线径div").className = "显示框";
+                document.getElementById("单相功率div").className = "显示框";
+                document.getElementById("三相功率div").className = "显示框";
                 document.getElementById("线径").value = S;
+                document.getElementById("单相功率").value = 220 * value / 1000;
+                document.getElementById("三相功率").value = 1.732 * 380 * value / 1000;
+                break;
+            case "单相功率":
+                var I = value * 1000 / 220
+                var S = S_calc(I, { a: 11.84, m: 0.628, b: 0, n: 0 })
+                document.getElementById("单相功率div").className = "已输入";
+                document.getElementById("线径div").className = "显示框";
+                document.getElementById("电流div").className = "显示框";
+                document.getElementById("三相功率div").className = "显示框";
+                document.getElementById("线径").value = S;
+                document.getElementById("电流").value = I;
+                document.getElementById("三相功率").value = 1.732 * 380 * I / 1000;
+                break;
+            case "三相功率":
+                var I = value * 1000 / 1.732 / 380
+                var S = S_calc(I, { a: 11.84, m: 0.628, b: 0, n: 0 })
+                document.getElementById("电流div").className = "已输入";
+                document.getElementById("线径div").className = "显示框";
+                document.getElementById("单相功率div").className = "显示框";
+                document.getElementById("三相功率div").className = "显示框";
+                document.getElementById("线径").value = S;
+                document.getElementById("电流").value = I;
+                document.getElementById("单相功率").value = 220 * I / 1000;
                 break;
         }
     }
@@ -101,4 +135,5 @@ function S_calc(电流, 参数) { //给定电流计算最小导线截面积
     }
     return Math.ceil(最小截面积);
 }
+
 
