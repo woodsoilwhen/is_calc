@@ -5,135 +5,75 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="/bootstrap/bootstrap-5.3.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
-    <title>电流-线径计算器</title>
+    <title>电流-线径对照表</title>
 </head>
 
 <body>
-    <div class="page-body">
-        <div class="container-md">
 
-            
 
-            <hr>
-
-            
-
-            <hr>
-            <!-- 计算参数设置 -->
-            <div class="container text-center">
-                <!-- 功率输入 -->
-                <div class="row mb-3">
-                    <label class="col-4 col-form-label" for="功率">功率</label>
-                    <div class="col-8">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="功率" id="功率">
-                            <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                data-bs-toggle="dropdown" id="功率单位">kW</button>
-
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" onclick="修改功率单位('W')">W</a></li>
-                                <li><a class="dropdown-item" onclick="修改功率单位('kW')">kW</a></li>
-                            </ul>
+    <div class="container-md text-center">
+        <div class="accordion accordion-flush" id="accordionFlushExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                        参数设置
+                    </button>
+                </h2>
+                <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                        <div class="form-floating">
+                            <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                                <option selected value="1">铜导线</option>
+                                <option value="2">铝导线</option>
+                            </select>
+                            <label for="floatingSelect">导线类型</label>
                         </div>
-                    </div>
-                </div>
 
-                <script>
-                    var 功率单位 = document.getElementById('功率单位')
-                    function 修改功率单位(单位) { 功率单位.innerHTML = 单位 }
-                </script>
-
-                <!-- 电源类型 -->
-                <div class="row">
-                    <label class="col-4 col-form-label">电源类型</label>
-                    <div class="col-8">
-                        <div class="d-grid">
-                            <div class="btn-group" role="group">
-                                <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off"
-                                    checked>
-                                <label class="btn btn-outline-primary" for="btnradio1">三相</label>
-
-                                <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-                                <label class="btn btn-outline-primary" for="btnradio2">单相</label>
-                            </div>
+                        <div class="form-floating">
+                            <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                                <option selected value="1">A1-单芯电缆敷设在隔热强中的导管内</option>
+                                <option value="2">A2-多芯电缆敷设在隔热强中的导管内</option>
+                                <option value="2">B1-单芯电缆敷设在木制墙上的导管内</option>
+                                <option value="2">B2-多芯电缆敷设在木制墙上的导管内</option>
+                                <option value="2">C-单芯或多芯电缆敷设在木制墙上</option>
+                                <option value="2">D-多芯电缆敷设在埋地的管槽内</option>
+                                <option value="2">D2-带护套的单芯或多芯电缆直埋在土壤中</option>
+                                <option value="2">E-多芯电缆敷设在自由空气中与墙间距不小于一根电缆直径的0.3倍</option>
+                            </select>
+                            <label for="floatingSelect">敷设方式</label>
                         </div>
-                    </div>
-                </div>
-            </div>
 
-            <hr>
-
-            <!-- 更多设置的折叠面板 -->
-            <div class="accordion accordion-flush" id="accordionFlushExample">
-                <!-- 折叠面板元素 -->
-                <div class="accordion-item">
-                    <!-- 折叠面板标题 -->
-                    <h2 class="accordion-header" id="flush-headingOne">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#flush-collapseOne">
-                            更多设置
-                        </button>
-                    </h2>
-
-                    <div id="flush-collapseOne" class="accordion-collapse collapse"
-                        data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">
-                            <!-- 折叠面板内容 -->
-                            <div class="container text-center">
-                                <!-- 电压 -->
-                                <div class="row mb-3">
-                                    <label class="col-4 col-form-label" for="电压">电压</label>
-                                    <div class="col-8">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="电压"
-                                            id="电压" onkeyup="更多设置键入(this.value,this.id)">
-                                            <span class="input-group-text">V</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- 误差 -->
-                                <div class="row">
-                                    <label class="col-4 col-form-label" for="误差">误差</label>
-                                    <div class="col-8">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="误差"
-                                            id="误差" onkeyup="更多设置键入(this.value,this.id)">
-                                            <span class="input-group-text">%</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <hr>
-
-                                <!-- 保留小数位数 -->
-                                <div class="row mb-3">
-                                    <label class="col-4 col-form-label" for="保留小数位数">保留小数位数</label>
-                                    <div class="col-8">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="保留小数位数"
-                                            id="保留小数位数" onkeyup="更多设置键入(this.value,this.id)">
-                                            <span class="input-group-text">位</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <!-- 保存/恢复默认按钮 -->
-                            <div class="container text-end">
-                                <button class="btn btn-outline-secondary" type="button" id="恢复默认按钮" onclick="恢复默认()"  >恢复默认</button>
-                                <button class="btn btn-secondary" type="button" id="撤销修改按钮" onclick=""  >撤销修改</button>
-                                <button class="btn btn-primary" type="button" id="保存按钮" onclick="保存()">保存</button>
-                            </div>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                            <label for="floatingInput">电压</label>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="row row-cols-3">
+            <div class="col">线径</div>
+            <div class="col">电流</div>
+            <div class="col">功率</div>
+            <div class="col">1.0</div>
+            <div class="col">11</div>
+            <div class="col">Column</div>
+            <div class="col">1.5</div>
+            <div class="col">14.5</div>
+            <div class="col">Column</div>
+            <div class="col">2.5</div>
+            <div class="col">19.5</div>
+            <div class="col">Column</div>
+            <div class="col">4</div>
+            <div class="col">26</div>
+            <div class="col">Column</div>
+            <div class="col">6</div>
+            <div class="col">34</div>
+            <div class="col">Column</div>
+        </div>
     </div>
-    <script src="/new.js"></script>
-    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/bootstrap/bootstrap-5.3.0-alpha1/js/bootstrap.bundle.js"></script>
 </body>
 
 </html>
