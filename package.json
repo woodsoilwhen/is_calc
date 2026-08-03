@@ -1,0 +1,20 @@
+{
+  "name": "is-calc",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "电气计算器：电流线径计算 / 功率电阻计算（Vite + React）",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11"
+  }
+}

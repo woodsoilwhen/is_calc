@@ -1,0 +1,233 @@
+/* ===== 全局初始化 ===== */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background-color: #f2f2f2;
+  font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.content {
+  flex: 1;
+  overflow: auto;
+  background-color: #f2f2f2;
+}
+
+/* ===== 顶部导航栏 ===== */
+.navbar {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  background-color: #fff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.hamburger {
+  position: absolute;
+  top: 5px;
+  left: 20px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  box-shadow:
+    18px 18px 30px rgba(0, 0, 0, 0.2),
+    -18px -18px 30px rgba(255, 255, 255, 1);
+  transition: all 0.5s;
+  -webkit-appearance: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  color: #7a7a7a;
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 20;
+}
+
+.hamburger.open {
+  left: 225px;
+  box-shadow:
+    0 0 0 rgb(0 0 0 / 20%),
+    0 0 0 rgb(255 255 255 / 80%),
+    inset 18px 18px 30px rgb(0 0 0 / 10%),
+    inset -18px -18px 30px rgb(255 255 255);
+  color: #fff;
+}
+
+.shadow {
+  background-color: #fff;
+  width: 100%;
+  height: 100%;
+}
+
+.navbar ul {
+  position: absolute;
+  top: 0;
+  left: -200px;
+  width: 200px;
+  height: 100vh;
+  background-color: #20222a;
+  transition: all 0.5s;
+  list-style: none;
+  z-index: 15;
+}
+
+.navbar ul.open {
+  left: 0;
+}
+
+.navbar ul li {
+  width: 100%;
+  height: 70px;
+  margin-bottom: 10px;
+}
+
+.navbar ul li.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+}
+
+.navbar ul li.logo img {
+  width: 80px;
+  border-radius: 50%;
+}
+
+.navbar ul li.logo span {
+  color: #fff;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.navbar ul li a {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  color: #d2d2d2;
+  text-decoration: none;
+  border-left: 6px solid transparent;
+}
+
+.navbar ul li a i {
+  font-size: 18px;
+  margin: 0 15px;
+}
+
+.navbar ul li a span {
+  font-size: 14px;
+}
+
+.navbar ul li a:hover,
+.navbar ul li a.active {
+  color: #fff;
+  border-left-color: #fb7299;
+}
+
+/* ===== 输入框 ===== */
+:root {
+  --field-width: calc(100% - 20px);
+  --font-height: 1.5rem;
+  --label-bg: #f8f5f0;
+  --label-color: #495057;
+  --input-bg: #fff;
+  --input-color: #495057;
+  --placeholder-color: #8e8c84;
+  --border-color: #ced4da;
+}
+
+.field {
+  position: relative;
+  display: flex;
+  width: var(--field-width);
+  margin: 10px;
+}
+
+.field span {
+  border-radius: 0.3rem;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  color: var(--label-color);
+  background-color: var(--label-bg);
+  border: 1px solid var(--border-color);
+  white-space: nowrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  font-size: var(--font-height);
+  margin-right: -1px;
+}
+
+.field input {
+  border-radius: 0.3rem;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  color: var(--input-color);
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1rem;
+  font-size: var(--font-height);
+  width: 100%;
+  flex: auto;
+  transition: border-color 0.25s ease-in-out;
+  cursor: text;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.field input:focus {
+  border-color: #6f9dca;
+  outline: 0;
+}
+
+.field .status {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-radius: 0.3rem;
+  transition: box-shadow 0.55s ease-in-out;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.field input:focus + .status.not-entered,
+.field input + .status.entered {
+  box-shadow: 0 0 0 0.2rem rgb(50 93 136 / 25%);
+}
+
+.field input::placeholder {
+  color: var(--placeholder-color);
+}
+
+.field input[type="number"]::-webkit-inner-spin-button,
+.field input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+}
