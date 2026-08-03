@@ -51,9 +51,6 @@ body {
   border: none;
   border-radius: 5px;
   background: transparent;
-  box-shadow:
-    18px 18px 30px rgba(0, 0, 0, 0.2),
-    -18px -18px 30px rgba(255, 255, 255, 1);
   transition: all 0.5s;
   -webkit-appearance: none;
   outline: none;
@@ -68,12 +65,7 @@ body {
 }
 
 .hamburger.open {
-  left: 225px;
-  box-shadow:
-    0 0 0 rgb(0 0 0 / 20%),
-    0 0 0 rgb(255 255 255 / 80%),
-    inset 18px 18px 30px rgb(0 0 0 / 10%),
-    inset -18px -18px 30px rgb(255 255 255);
+  background-color: #3a3d47;
   color: #fff;
 }
 
@@ -85,13 +77,14 @@ body {
 
 .navbar ul {
   position: absolute;
-  top: 0;
-  left: -200px;
-  width: 200px;
-  height: 100vh;
+  top: 50px;
+  left: -240px;
+  width: 240px;
+  height: calc(100vh - 50px);
   background-color: #20222a;
   transition: all 0.5s;
   list-style: none;
+  overflow-y: auto;
   z-index: 15;
 }
 
@@ -167,7 +160,8 @@ body {
   position: relative;
   display: flex;
   width: var(--field-width);
-  margin: 10px;
+  max-width: 480px;
+  margin: 10px auto;
 }
 
 .field span {
