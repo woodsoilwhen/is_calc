@@ -1,7 +1,7 @@
 {
   "name": "is-calc",
   "private": true,
-  "version": "2.0.0",
+  "version": "2.1.0",
   "type": "module",
   "description": "电气计算器：电流线径计算 / 功率电阻计算（Vite + React）",
   "scripts": {

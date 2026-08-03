@@ -23,6 +23,11 @@ export default function App() {
     window.localStorage.setItem(STORAGE_KEY, page);
   }, [page]);
 
+  useEffect(() => {
+    document.title =
+      page === PAGES.power ? '功率电阻计算 · 电气计算器' : '电流线径计算 · 电气计算器';
+  }, [page]);
+
   return (
     <div className="app">
       <Navbar page={page} onNavigate={setPage} />

@@ -1,4 +1,4 @@
-const cacheName = 'is_calc_v2.0.0';
+const cacheName = 'is_calc_v2.1.0';
 
 // 安装
 self.addEventListener('install', (e) => {
