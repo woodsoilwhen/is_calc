@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { PAGES } from '../constants';
 import { useInstallPrompt } from '../hooks/useInstallPrompt';
+import { useServiceWorkerUpdate } from '../hooks/useServiceWorkerUpdate';
 
 const NAV_ITEMS = [
   { key: PAGES.power, icon: 'fa fa-home', label: '功率电阻计算' },
@@ -10,6 +11,7 @@ const NAV_ITEMS = [
 export default function Navbar({ page, onNavigate }) {
   const [open, setOpen] = useState(false);
   const { canInstall, promptInstall } = useInstallPrompt();
+  const { updateAvailable, applyUpdate } = useServiceWorkerUpdate();
 
   useEffect(() => {
     if (!open) return undefined;
@@ -65,6 +67,18 @@ export default function Navbar({ page, onNavigate }) {
           </button>
         )}
       </nav>
+
+      {updateAvailable && (
+        <button
+          type="button"
+          className="update-banner"
+          onClick={applyUpdate}
+          aria-live="polite"
+        >
+          <i className="fa fa-refresh" aria-hidden="true" />
+          <span>发现新版本，点击立即更新</span>
+        </button>
+      )}
 
       <div
         className={`drawer-backdrop${open ? ' open' : ''}`}
