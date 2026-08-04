@@ -1,14 +1,43 @@
 const cacheName = 'is_calc_v2.2.0';
 const NAV_FALLBACK = './index.html';
 
-// 安装：预缓存新版入口页面，确保“缓存完成”后再提示用户更新
+// 从入口 HTML 中提取同源相对资源引用（assets、css、图标、manifest 等），生成预缓存清单
+async function collectPrecacheUrls(html) {
+  const urls = new Set(['./', './index.html']);
+  const re = /(?:src|href)="([^"]+)"/g;
+  let m;
+  while ((m = re.exec(html))) {
+    const url = m[1];
+    // 仅收集同源相对引用，跳过外链 / data: / 锚点等
+    if (
+      url &&
+      !url.startsWith('http://') &&
+      !url.startsWith('https://') &&
+      !url.startsWith('//') &&
+      !url.startsWith('data:') &&
+      !url.startsWith('#') &&
+      !url.startsWith('mailto:')
+    ) {
+      urls.add(url);
+    }
+  }
+  return [...urls];
+}
+
+// 安装：预缓存入口页面及其引用的全部构建产物，
+// 确保新版本切换后离线/弱网也能完整加载，不依赖运行时网络
 self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open(cacheName).then((cache) =>
-      Promise.all(
-        ['./', './index.html'].map((url) => cache.add(url).catch(() => {}))
-      )
-    )
+    (async () => {
+      const cache = await caches.open(cacheName);
+      // 以最新入口 HTML 为准解析资源清单（install 期间不经由任何 SW 拦截，直接走网络）
+      // reload 强制绕过 HTTP 缓存，避免 304 复用旧 HTML 导致提取到旧版 assets
+      const res = await fetch('./index.html', { cache: 'reload' }).catch(() => null);
+      const html = res && res.ok ? await res.text() : '';
+      const urls = html ? await collectPrecacheUrls(html) : ['./', './index.html'];
+      // 单个资源失败不阻塞安装（尽力而为），避免非关键资源 404 导致更新永远无法激活
+      await Promise.all(urls.map((url) => cache.add(url).catch(() => {})));
+    })()
   );
 });
 
@@ -40,11 +69,27 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return; // 仅处理同源请求
 
-  // 页面导航：缓存优先 + 后台更新（stale-while-revalidate）
+  // 页面导航：缓存优先 + 后台更新（stale-while-revalidate），断网且无缓存时回退到入口页
   if (request.mode === 'navigate' || request.destination === 'document') {
     e.respondWith(
       caches.match(request).then((cached) => {
-        const network = fetch(request)
+        if (cached) {
+          // 先返回缓存，同时后台刷新
+          fetch(request)
+            .then((response) => {
+              if (response.ok) {
+                const copy = response.clone();
+                caches
+                  .open(cacheName)
+                  .then((cache) => cache.put(request, copy))
+                  .catch(() => {});
+              }
+            })
+            .catch(() => {});
+          return cached;
+        }
+        // 无缓存：请求网络，失败时回退到已预缓存的入口页
+        return fetch(request)
           .then((response) => {
             if (response.ok) {
               const copy = response.clone();
@@ -55,8 +100,11 @@ self.addEventListener('fetch', (e) => {
             }
             return response;
           })
-          .catch(() => cached);
-        return cached || network;
+          .catch(() =>
+            caches
+              .match(NAV_FALLBACK)
+              .then((fallback) => fallback || caches.match('./'))
+          );
       })
     );
     return;
