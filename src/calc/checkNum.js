@@ -5,3 +5,10 @@ export function checkNum(str) {
   if (str === '' || str == null) return true;
   return /^[+-]?(\d+(\.\d*)?|\.\d*)([eE][+-]?\d*)?$/.test(String(str));
 }
+
+// 判断字符串是否为可参与计算的完整数字。
+// "1.", "1e", "1e+" 等中间态虽然语法合法，但尚未输入完整，不应触发计算
+export function isCompleteNumber(str) {
+  if (str == null) return false;
+  return /^[+-]?(\d+(\.\d+)?|\.\d+)([eE][+-]?\d+)?$/.test(String(str));
+}

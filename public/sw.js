@@ -1,9 +1,10 @@
 const cacheName = 'is_calc_v2.2.0';
-const NAV_FALLBACK = './index.html';
+// 入口页候选：同一内容的两种 URL 形态，只缓存第一个成功获取的，避免重复存储
+const ENTRY_URLS = ['./', './index.html'];
 
 // 从入口 HTML 中提取同源相对资源引用（assets、css、图标、manifest 等），生成预缓存清单
 async function collectPrecacheUrls(html) {
-  const urls = new Set(['./', './index.html']);
+  const urls = new Set();
   const re = /(?:src|href)="([^"]+)"/g;
   let m;
   while ((m = re.exec(html))) {
@@ -57,15 +58,10 @@ async function collectCssUrls(cssUrls) {
   return [...urls];
 }
 
-// 判断 URL 是否为“关键资源”：入口页与带内容哈希的构建产物。
+// 判断 URL 是否为带内容哈希的构建产物（关键资源）。
 // 关键资源缓存失败时终止安装，避免离线更新后旧缓存被清空导致应用不可用
 function isCriticalUrl(url) {
-  const abs = new URL(url, self.location);
-  return (
-    abs.pathname.endsWith('/') ||
-    abs.pathname.endsWith('/index.html') ||
-    abs.pathname.includes('/assets/')
-  );
+  return new URL(url, self.location).pathname.includes('/assets/');
 }
 
 // 安装：预缓存入口页面及其引用的全部构建产物（含 CSS 内字体等），
@@ -78,14 +74,22 @@ self.addEventListener('install', (e) => {
       // reload 强制绕过 HTTP 缓存，避免 304 复用旧 HTML 导致提取到旧版 assets
       const res = await fetch('./index.html', { cache: 'reload' }).catch(() => null);
       const html = res && res.ok ? await res.text() : '';
-      const urls = new Set(html ? await collectPrecacheUrls(html) : ['./', './index.html']);
+      const urls = new Set(html ? await collectPrecacheUrls(html) : []);
+      // 入口页只缓存一个成功获取的 URL 形态，避免 './' 与 './index.html' 重复存同一份 HTML
+      let entryOk = false;
+      for (const entry of ENTRY_URLS) {
+        await cache.add(entry).then(() => { entryOk = true; }).catch(() => {});
+        if (entryOk) break;
+      }
+      // 入口页缓存失败（如离线更新）时终止安装，保留旧版本与旧缓存
+      if (!entryOk) throw new Error('entry precache failed');
       // 再解析 CSS 内 url() 引用的资源（字体、图片等），确保离线首屏完整呈现
       const cssUrls = [...urls].filter((u) => /\.css($|\?)/.test(u));
       if (cssUrls.length) {
         for (const u of await collectCssUrls(cssUrls)) urls.add(u);
       }
       // 逐个尽力缓存并记录成败；非关键资源（字体、图标等）失败不阻塞安装，
-      // 但关键资源（入口页 / 构建产物）失败时终止本次安装，保留旧版本与旧缓存
+      // 但关键资源（构建产物）失败时终止本次安装，保留旧版本与旧缓存
       const items = [...urls].map((url) => ({ url, ok: false }));
       await Promise.all(
         items.map((item) =>
@@ -105,9 +109,9 @@ self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches
       .open(cacheName)
-      .then((cache) => cache.match('./index.html'))
-      .then((entry) => {
-        if (!entry) return;
+      .then((cache) => Promise.all(ENTRY_URLS.map((u) => cache.match(u))))
+      .then((entries) => {
+        if (!entries.some(Boolean)) return;
         return caches
           .keys()
           .then((keyList) =>
@@ -166,9 +170,9 @@ self.addEventListener('fetch', (e) => {
             return response;
           })
           .catch(() =>
-            caches
-              .match(NAV_FALLBACK)
-              .then((fallback) => fallback || caches.match('./'))
+            Promise.all(ENTRY_URLS.map((u) => caches.match(u))).then((entries) =>
+              entries.find(Boolean)
+            )
           );
       })
     );

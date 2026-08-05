@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Field from '../components/Field';
 import { calcArea, calcCurrent } from '../calc/currentCalc';
-import { checkNum } from '../calc/checkNum';
+import { checkNum, isCompleteNumber } from '../calc/checkNum';
 import { formatNumber } from '../calc/format';
 
 const EMPTY_VALUES = { current: '', area: '', singlePhase: '', threePhase: '' };
@@ -51,10 +51,10 @@ export default function CurrentCalc() {
     }
 
     const num = parseFloat(raw);
-    // 输入尚未完整（如单独的小数点或正负号），等待继续输入
-    if (!Number.isFinite(num)) return;
-    // 0 或负数无物理意义，直接提示（"0." 等中间态继续等待）
-    if (num <= 0 && String(num) === raw) {
+    // 输入尚未完整（如 ".", "0.", "1e", "1e+" 等），等待继续输入，避免提前计算
+    if (!Number.isFinite(num) || !isCompleteNumber(raw)) return;
+    // 0 或负数无物理意义，直接提示
+    if (num <= 0) {
       showError(field, '请输入大于 0 的数字');
       return;
     }
