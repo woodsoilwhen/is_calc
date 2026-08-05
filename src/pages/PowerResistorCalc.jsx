@@ -43,6 +43,11 @@ export default function PowerResistorCalc() {
     const num = parseFloat(raw);
     // 输入尚未完整（如单独的小数点或正负号），等待继续输入
     if (!Number.isFinite(num)) return;
+    // 0 或负数无物理意义，直接提示（"0." 等中间态继续等待）
+    if (num <= 0 && String(num) === raw) {
+      showError(field, '请输入大于 0 的数字');
+      return;
+    }
 
     const next = { ...EMPTY_VALUES, [field]: raw };
     const nextStatus = { ...DISPLAY_STATUS, [field]: 'entered' };

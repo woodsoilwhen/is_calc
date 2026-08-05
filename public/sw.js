@@ -57,6 +57,17 @@ async function collectCssUrls(cssUrls) {
   return [...urls];
 }
 
+// 判断 URL 是否为“关键资源”：入口页与带内容哈希的构建产物。
+// 关键资源缓存失败时终止安装，避免离线更新后旧缓存被清空导致应用不可用
+function isCriticalUrl(url) {
+  const abs = new URL(url, self.location);
+  return (
+    abs.pathname.endsWith('/') ||
+    abs.pathname.endsWith('/index.html') ||
+    abs.pathname.includes('/assets/')
+  );
+}
+
 // 安装：预缓存入口页面及其引用的全部构建产物（含 CSS 内字体等），
 // 确保新版本切换后离线/弱网也能完整加载，不依赖运行时网络
 self.addEventListener('install', (e) => {
@@ -73,23 +84,39 @@ self.addEventListener('install', (e) => {
       if (cssUrls.length) {
         for (const u of await collectCssUrls(cssUrls)) urls.add(u);
       }
-      // 单个资源失败不阻塞安装（尽力而为），避免非关键资源 404 导致更新永远无法激活
-      await Promise.all([...urls].map((url) => cache.add(url).catch(() => {})));
+      // 逐个尽力缓存并记录成败；非关键资源（字体、图标等）失败不阻塞安装，
+      // 但关键资源（入口页 / 构建产物）失败时终止本次安装，保留旧版本与旧缓存
+      const items = [...urls].map((url) => ({ url, ok: false }));
+      await Promise.all(
+        items.map((item) =>
+          cache.add(item.url).then(() => { item.ok = true; }).catch(() => {})
+        )
+      );
+      if (items.some((item) => !item.ok && isCriticalUrl(item.url))) {
+        throw new Error('critical precache failed');
+      }
     })()
   );
 });
 
-// 激活：清理旧版本缓存并接管页面
+// 激活：确认新缓存含入口页后再清理旧版本缓存并接管页面，
+// 避免缓存不完整时清空旧缓存导致离线不可用
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches
-      .keys()
-      .then((keyList) =>
-        Promise.all(
-          keyList.filter((key) => key !== cacheName).map((key) => caches.delete(key))
-        )
-      )
-      .then(() => self.clients.claim())
+      .open(cacheName)
+      .then((cache) => cache.match('./index.html'))
+      .then((entry) => {
+        if (!entry) return;
+        return caches
+          .keys()
+          .then((keyList) =>
+            Promise.all(
+              keyList.filter((key) => key !== cacheName).map((key) => caches.delete(key))
+            )
+          )
+          .then(() => self.clients.claim());
+      })
   );
 });
 

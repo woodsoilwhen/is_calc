@@ -50,12 +50,9 @@ export function calcCurrent(area, params = DEFAULT_PARAMS) {
 // 给定电流计算最小对应线截面积
 export function calcArea(current, params = DEFAULT_PARAMS) {
   const minArea = minAreaForCurrent(current, params);
-  const prev = CABLE_SIZES[0];
+  // 从最小规格起，选第一个同时满足“截面积达标”和“载流量达标”的规格
   for (const size of CABLE_SIZES) {
-    if (size >= minArea) {
-      if (calcCurrent(prev, params) >= current) return prev;
-      if (calcCurrent(size, params) >= current) return size;
-    }
+    if (size >= minArea && calcCurrent(size, params) >= current) return size;
   }
   return Math.ceil(minArea);
 }
