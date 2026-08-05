@@ -24,7 +24,40 @@ async function collectPrecacheUrls(html) {
   return [...urls];
 }
 
-// 安装：预缓存入口页面及其引用的全部构建产物，
+// 从 CSS 文本中提取 url(...) 引用的同源资源（字体、图片等），补全预缓存清单
+async function collectCssUrls(cssUrls) {
+  const urls = new Set();
+  for (const cssUrl of cssUrls) {
+    const res = await fetch(cssUrl, { cache: 'reload' }).catch(() => null);
+    if (!res || !res.ok) continue;
+    const text = await res.text();
+    const re = /url\(\s*(['"]?)([^'")]+)\1\s*\)/g;
+    let m;
+    while ((m = re.exec(text))) {
+      const raw = m[2].trim();
+      // 仅收集同源资源，跳过 data: / 锚点 / 外链等
+      if (
+        !raw ||
+        raw.startsWith('data:') ||
+        raw.startsWith('#') ||
+        raw.startsWith('http://') ||
+        raw.startsWith('https://') ||
+        raw.startsWith('//')
+      ) {
+        continue;
+      }
+      try {
+        // 相对路径以 CSS 所在 URL 为基准解析
+        urls.add(new URL(raw, new URL(cssUrl, self.location)).href);
+      } catch {
+        // 忽略无法解析的 URL
+      }
+    }
+  }
+  return [...urls];
+}
+
+// 安装：预缓存入口页面及其引用的全部构建产物（含 CSS 内字体等），
 // 确保新版本切换后离线/弱网也能完整加载，不依赖运行时网络
 self.addEventListener('install', (e) => {
   e.waitUntil(
@@ -34,9 +67,14 @@ self.addEventListener('install', (e) => {
       // reload 强制绕过 HTTP 缓存，避免 304 复用旧 HTML 导致提取到旧版 assets
       const res = await fetch('./index.html', { cache: 'reload' }).catch(() => null);
       const html = res && res.ok ? await res.text() : '';
-      const urls = html ? await collectPrecacheUrls(html) : ['./', './index.html'];
+      const urls = new Set(html ? await collectPrecacheUrls(html) : ['./', './index.html']);
+      // 再解析 CSS 内 url() 引用的资源（字体、图片等），确保离线首屏完整呈现
+      const cssUrls = [...urls].filter((u) => /\.css($|\?)/.test(u));
+      if (cssUrls.length) {
+        for (const u of await collectCssUrls(cssUrls)) urls.add(u);
+      }
       // 单个资源失败不阻塞安装（尽力而为），避免非关键资源 404 导致更新永远无法激活
-      await Promise.all(urls.map((url) => cache.add(url).catch(() => {})));
+      await Promise.all([...urls].map((url) => cache.add(url).catch(() => {})));
     })()
   );
 });
