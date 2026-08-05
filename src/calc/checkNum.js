@@ -3,7 +3,7 @@
 // 但拒绝结构非法的输入（如 "1.2.3", "abc"）。
 export function checkNum(str) {
   if (str === '' || str == null) return true;
-  return /^[+-]?(\d+(\.\d*)?|\.\d*)([eE][+-]?\d*)?$/.test(String(str));
+  return /^[+-]?(\d+(\.\d*)?|\.\d*)?([eE][+-]?\d*)?$/.test(String(str));
 }
 
 // 判断字符串是否为可参与计算的完整数字。

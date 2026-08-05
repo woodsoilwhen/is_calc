@@ -41,8 +41,13 @@ export default function PowerResistorCalc() {
     }
 
     const num = parseFloat(raw);
-    // 输入尚未完整（如 ".", "0.", "1e", "1e+" 等），等待继续输入，避免提前计算
-    if (!Number.isFinite(num) || !isCompleteNumber(raw)) return;
+    // 输入尚未完整（如 ".", "-", "0.", "1e", "1e+" 等），等待继续输入，避免提前计算
+    if (!isCompleteNumber(raw)) return;
+    // 超出可表示范围（如 "1e999"）时直接提示，避免静默等待
+    if (!Number.isFinite(num)) {
+      showError(field, '数字超出可计算范围');
+      return;
+    }
     // 0 或负数无物理意义，直接提示
     if (num <= 0) {
       showError(field, '请输入大于 0 的数字');

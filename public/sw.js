@@ -1,3 +1,4 @@
+// 缓存名：无需随版本手动修改；activate 时会自动清理不再被引用的旧版构建产物
 const cacheName = 'is_calc_v2.2.0';
 // 入口页候选：同一内容的两种 URL 形态，只缓存第一个成功获取的，避免重复存储
 const ENTRY_URLS = ['./', './index.html'];
@@ -103,6 +104,24 @@ self.addEventListener('install', (e) => {
   );
 });
 
+// 清理当前缓存中已不再被入口页引用的旧版构建产物（带内容哈希的 assets）。
+// 这样发布新版本时无需手动修改缓存名，旧哈希资源也会被自动清除
+async function cleanupStaleAssets() {
+  const cache = await caches.open(cacheName);
+  const entry = (await Promise.all(ENTRY_URLS.map((u) => cache.match(u)))).find(Boolean);
+  if (!entry) return;
+  const html = await entry.text();
+  const urls = html ? await collectPrecacheUrls(html) : [];
+  const expected = new Set(urls.map((u) => new URL(u, self.location).pathname));
+  const keys = await cache.keys();
+  await Promise.all(
+    keys
+      .map((req) => new URL(req.url))
+      .filter((u) => u.pathname.includes('/assets/') && !expected.has(u.pathname))
+      .map((u) => cache.delete(u.href))
+  );
+}
+
 // 激活：确认新缓存含入口页后再清理旧版本缓存并接管页面，
 // 避免缓存不完整时清空旧缓存导致离线不可用
 self.addEventListener('activate', (e) => {
@@ -112,11 +131,12 @@ self.addEventListener('activate', (e) => {
       .then((cache) => Promise.all(ENTRY_URLS.map((u) => cache.match(u))))
       .then((entries) => {
         if (!entries.some(Boolean)) return;
-        return caches
-          .keys()
-          .then((keyList) =>
-            Promise.all(
-              keyList.filter((key) => key !== cacheName).map((key) => caches.delete(key))
+        return cleanupStaleAssets()
+          .then(() =>
+            caches.keys().then((keyList) =>
+              Promise.all(
+                keyList.filter((key) => key !== cacheName).map((key) => caches.delete(key))
+              )
             )
           )
           .then(() => self.clients.claim());
