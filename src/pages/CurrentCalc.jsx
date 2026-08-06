@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Field from '../components/Field';
-import { calcArea, calcCurrent } from '../calc/currentCalc';
+import { calcArea, calcCurrent, isStandardSize } from '../calc/currentCalc';
 import { checkNum, isCompleteNumber } from '../calc/checkNum';
 import { formatNumber } from '../calc/format';
 
@@ -23,8 +23,13 @@ export default function CurrentCalc() {
   const [status, setStatus] = useState(EMPTY_STATUS);
   const [error, setError] = useState(null);
   const errorTimer = useRef(null);
+  const [notice, setNotice] = useState(null);
+  const noticeTimer = useRef(null);
 
-  useEffect(() => () => clearTimeout(errorTimer.current), []);
+  useEffect(() => () => {
+    clearTimeout(errorTimer.current);
+    clearTimeout(noticeTimer.current);
+  }, []);
 
   const showError = (field, message) => {
     setError({ field, message });
@@ -36,6 +41,13 @@ export default function CurrentCalc() {
     setValues(EMPTY_VALUES);
     setStatus(EMPTY_STATUS);
     setError(null);
+    setNotice(null);
+  };
+
+  const showNotice = (message) => {
+    setNotice(message);
+    clearTimeout(noticeTimer.current);
+    noticeTimer.current = setTimeout(() => setNotice(null), 3000);
   };
 
   const handleChange = (field) => (e) => {
@@ -82,6 +94,7 @@ export default function CurrentCalc() {
         next.area = formatNumber(s);
         next.singlePhase = formatNumber((220 * num) / 1000);
         next.threePhase = formatNumber((1.732 * 380 * num) / 1000);
+        if (!isStandardSize(s)) showNotice('电流过大，超出常用线径规格，已按计算值取整');
         break;
       }
       case 'singlePhase': {
@@ -91,6 +104,7 @@ export default function CurrentCalc() {
         next.current = formatNumber(i);
         next.area = formatNumber(s);
         next.threePhase = formatNumber((1.732 * 380 * i) / 1000);
+        if (!isStandardSize(s)) showNotice('功率过大，电流超出常用线径规格，已按计算值取整');
         break;
       }
       case 'threePhase': {
@@ -100,6 +114,7 @@ export default function CurrentCalc() {
         next.current = formatNumber(i);
         next.area = formatNumber(s);
         next.singlePhase = formatNumber((220 * i) / 1000);
+        if (!isStandardSize(s)) showNotice('功率过大，电流超出常用线径规格，已按计算值取整');
         break;
       }
       default:
@@ -134,6 +149,13 @@ export default function CurrentCalc() {
         <div className="error-bar" role="alert">
           <i className="fa fa-exclamation-circle" aria-hidden="true" />
           {error.message}
+        </div>
+      )}
+
+      {notice && (
+        <div className="notice-bar" role="status">
+          <i className="fa fa-info-circle" aria-hidden="true" />
+          {notice}
         </div>
       )}
 

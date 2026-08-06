@@ -4,6 +4,11 @@ export const DEFAULT_PARAMS = { a: 11.84, m: 0.628, b: 0, n: 0 };
 // 可选线径规格
 const CABLE_SIZES = [0.5, 1, 1.5, 2.5, 4, 6, 10, 16, 25, 35, 50, 70, 95, 120, 150, 185, 240, 300];
 
+// 是否为标准线径规格（calcArea 超出规格表时会返回 Math.ceil(minArea) 的兜底值，用此函数区分）
+export function isStandardSize(area) {
+  return CABLE_SIZES.includes(area);
+}
+
 // 载流量计算公式：给定截面积计算载流量
 export function currentFromArea(area, params = DEFAULT_PARAMS) {
   const first = params.a * Math.pow(area, params.m);

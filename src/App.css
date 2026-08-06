@@ -533,6 +533,36 @@ button {
   font-size: 14px;
 }
 
+/* ===== 信息提示 ===== */
+.notice-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 9px 12px;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: var(--radius-sm);
+  background-color: rgba(59, 130, 246, 0.08);
+  color: #2563eb;
+  font-size: 0.875rem;
+  animation: notice-in 0.25s ease;
+}
+
+.notice-bar i {
+  font-size: 14px;
+}
+
+@keyframes notice-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* ===== 公式说明 ===== */
 .formula-note {
   margin-top: 14px;
